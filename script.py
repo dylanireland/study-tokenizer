@@ -30,11 +30,13 @@ def rec(fileIndex):
                     #^ Word really meaning phrase here, for phrase in list of phrases
                     word = re.sub(r'[^\w\s]','',word).lower().strip()
                     #^ Replace all punctuation with blank string, lower the case, and strip leading and trailing whitespace
-                    dict[word] = (dict[word][0] + 1, (dict[word][1] + 1 if not word in countedInFile else dict[word][1])) if word in dict else (1, 1)
-                    #^ Creates or increments object stored at location "word" in a dictionary. Given a word, if it exists in the dictionary already, will increment its occurrence count,
-                    #^ and will increment its appearance count if countedInFile[word] == False. If word is not in dict, log its file appearances and number of occurrences as 1 and 1
-                    countedInFile[word] = True
-                    #^ Log that this word has now already been found in this file and don't increment again for this file
+                    if len(word.split(" ")) == phraseCount:
+                        #^ If word count in phrase is equal to phraseCount, add to dictionary below
+                        dict[word] = (dict[word][0] + 1, (dict[word][1] + 1 if not word in countedInFile else dict[word][1])) if word in dict else (1, 1)
+                        #^ Creates or increments object stored at location "word" in a dictionary. Given a word, if it exists in the dictionary already, will increment its occurrence count,
+                        #^ and will increment its appearance count if countedInFile[word] == False. If word is not in dict, log its file appearances and number of occurrences as 1 and 1
+                        countedInFile[word] = True
+                        #^ Log that this word has now already been found in this file and don't increment again for this file
 
             print("{}th phrase length".format(phraseCount))
             #^ So I know it's doing stuff
@@ -46,7 +48,7 @@ def rec(fileIndex):
         return
         #^ If we've now searched through all the files, exit back to line 60
     rec(fileIndex + 1)
-    #^ If we're not at file 82, dont return and have the function call itself with an incremented fileIndex
+    #^ If we're not at file 82, dont return and have the function call itself again with an incremented fileIndex
 
 
 
@@ -76,9 +78,8 @@ def makeOutfile(dicti, outname):
                 break
 
 
-with open("out.txt", "w+") as outfile:
-    #SORTING AND OUTPUT
-    appSort = {k: v for k, v in sorted(dict.items(), key=lambda item: item[1][1])}
-    occSort = {k: v for k, v in sorted(dict.items(), key=lambda item: item[1][0])}
-    makeOutfile(appSort, "appearancesSorted.txt")
-    makeOutfile(occSort, "occurrencesSorted.txt")
+
+appSort = {k: v for k, v in sorted(dict.items(), key=lambda item: item[1][1])}
+occSort = {k: v for k, v in sorted(dict.items(), key=lambda item: item[1][0])}
+makeOutfile(appSort, "appearancesSorted.txt")
+makeOutfile(occSort, "occurrencesSorted.txt")
